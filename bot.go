@@ -2,6 +2,7 @@ package ninu
 
 import (
 	"fmt"
+	"os"
 	"time"
 
 	tb "gopkg.in/tucnak/telebot.v2"
@@ -10,8 +11,9 @@ import (
 var TelegramBot *tb.Bot
 
 func NewTelegramBot() {
+	token := os.Getenv("TELEGRAM_API_TOKEN")
 	botSettings := tb.Settings{
-		Token:  "secret",
+		Token:  token,
 		Poller: &tb.LongPoller{Timeout: 10 * time.Second},
 	}
 	b, err := tb.NewBot(botSettings)
