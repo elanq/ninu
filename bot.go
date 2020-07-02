@@ -5,6 +5,7 @@ import (
 	"os"
 	"time"
 
+	"google.golang.org/api/sheets/v4"
 	tb "gopkg.in/tucnak/telebot.v2"
 )
 
@@ -21,6 +22,78 @@ func NewTelegramBot() {
 		panic(err)
 	}
 	TelegramBot = b
+}
+
+func HandleLogin(message *tb.Message) {
+	if token, _ := SavedToken(); token != nil {
+		TelegramBot.Send(message.Sender, "You are already authorized")
+		return
+	}
+
+	authURL := AuthURL()
+	msg := fmt.Sprintf("go to this URL and copy the authorization code %v", authURL)
+	TelegramBot.Send(message.Sender, msg)
+}
+
+func HandleAuthorize(message *tb.Message) {
+	sender := message.Sender
+	authCode := message.Payload
+	if err := Authorize(authCode); err != nil {
+		TelegramBot.Send(sender, "Error while authorizing code")
+		TelegramBot.Send(sender, err.Error())
+		return
+	}
+
+	TelegramBot.Send(sender, "User authorized")
+}
+
+func HandleAdd(message *tb.Message) {
+	if Client() == nil {
+		TelegramBot.Send(message.Sender, "Client is nil, authorize first")
+	}
+
+	srv, err := sheets.New(Client())
+	if err != nil {
+		TelegramBot.Send(message.Sender, err.Error())
+	}
+
+	sheetID := os.Getenv("SPREADSHEET_ID")
+	sheetRange := "ELANQIST0609_1137757232!I:K"
+	valueRange := sheets.ValueRange{
+		MajorDimension: "COLUMNS",
+		Values: [][]interface{}{
+			[]interface{}{"1", "2", "3"},
+		},
+	}
+	srv.Spreadsheets.Values.Update(sheetID, sheetRange, &valueRange)
+}
+
+func HandleTest(message *tb.Message) {
+	if Client() == nil {
+		TelegramBot.Send(message.Sender, "Client is nil, authorize first")
+	}
+
+	srv, err := sheets.New(Client())
+	if err != nil {
+		TelegramBot.Send(message.Sender, err.Error())
+	}
+
+	sheetID := os.Getenv("SPREADSHEET_ID")
+	sheetRange := "ELANQIST0609_1137757232!A6:F"
+	resp, err := srv.Spreadsheets.Values.Get(sheetID, sheetRange).Do()
+	if err != nil {
+		TelegramBot.Send(message.Sender, err.Error())
+	}
+
+	if len(resp.Values) == 0 {
+		TelegramBot.Send(message.Sender, "No data found.")
+	}
+
+	for _, row := range resp.Values {
+		msg := fmt.Sprintf("%s %s", row[0], row[1])
+		TelegramBot.Send(message.Sender, msg)
+	}
+
 }
 
 func HandleDownload(message *tb.Message) {

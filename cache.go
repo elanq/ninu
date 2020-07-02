@@ -9,7 +9,14 @@ import (
 
 const timeRepresentation = 15
 
-var CacheExpired = errors.New("Cache expired")
+var (
+	CacheExpired = errors.New("Cache expired")
+	Redis        Cache
+)
+
+func init() {
+	Redis = NewRedisCache()
+}
 
 type Cache interface {
 	Set(key string, val []byte, t ...time.Duration) error
