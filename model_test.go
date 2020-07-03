@@ -66,10 +66,8 @@ func TestToValueRange(t *testing.T) {
 			},
 			`
 				{
-					"majorDimension": "COLUMN",
-					"values": [
-						["06/09/1992", "Makanan", 20000]
-						]
+					"majorDimension": "ROWS",
+					"values": [["06/09/1992", "Makanan", 20000]]
 				}
 			`,
 		},

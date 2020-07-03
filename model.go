@@ -50,7 +50,7 @@ func (i *InputTransaction) ToValueRange() *sheets.ValueRange {
 	values = append(values, i.Amount)
 
 	return &sheets.ValueRange{
-		MajorDimension: "COLUMN",
+		MajorDimension: "ROWS",
 		Values: [][]interface{}{
 			values,
 		},
