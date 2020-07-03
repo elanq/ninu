@@ -10,8 +10,7 @@ import (
 )
 
 var (
-	TelegramBot  *tb.Bot
-	sheetService *sheets.Service
+	TelegramBot *tb.Bot
 )
 
 func NewTelegramBot() {
@@ -25,14 +24,6 @@ func NewTelegramBot() {
 		panic(err)
 	}
 	TelegramBot = b
-}
-
-func sheetClient() (*sheets.Service, error) {
-	if sheetService != nil {
-		return sheetService, nil
-	}
-
-	return sheets.New(Client())
 }
 
 func HandleLogin(message *tb.Message) {
@@ -63,26 +54,11 @@ func HandleAdd(message *tb.Message) {
 		TelegramBot.Send(message.Sender, "Client is nil, authorize first")
 	}
 
-	client, err := sheetClient()
-	if err != nil {
+	if err := AddTransaction(message.Payload); err != nil {
 		TelegramBot.Send(message.Sender, err.Error())
 	}
 
-	sheetID := os.Getenv("SPREADSHEET_ID")
-	sheetRange := "ELANQIST0609_1137757232!I:K"
-
-	in, err := ReadTransaction(message.Payload)
-	if err != nil {
-		TelegramBot.Send(message.Sender, err.Error())
-	}
-	valueRange := in.ToValueRange()
-	response, err := client.Spreadsheets.Values.Update(sheetID, sheetRange, valueRange).ValueInputOption("RAW").Do()
-	if err != nil {
-		TelegramBot.Send(message.Sender, err.Error())
-	}
-	//TODO: Save input state to redis
-	msg := fmt.Sprintf("Updated Row %v, Updated Column %v", response.UpdatedRows, response.UpdatedColumns)
-	TelegramBot.Send(message.Sender, msg)
+	TelegramBot.Send(message.Sender, "Transaction added")
 }
 
 func HandleTest(message *tb.Message) {
