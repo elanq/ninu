@@ -26,9 +26,9 @@ type InputTransaction struct {
 // 20000 is the amount of the transaction
 func ReadTransaction(message string) (*InputTransaction, error) {
 	values := strings.Split(message, " ")
-	if len(values) == 2 {
-		category := values[0]
-		amount, err := strconv.ParseInt(values[1], 10, 64)
+	if len(values) >= 2 {
+		category := strings.Join(values[0:len(values)-1], " ")
+		amount, err := strconv.ParseInt(values[len(values)-1], 10, 64)
 		if err != nil {
 			return nil, err
 

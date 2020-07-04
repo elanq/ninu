@@ -18,10 +18,19 @@ func TestReadTransaction(t *testing.T) {
 	}{
 		{
 			"normal_case",
-			"Makanan 2000",
+			"Makanan 20000",
 			&ninu.InputTransaction{
-				Amount:   2000,
+				Amount:   20000,
 				Category: "Makanan",
+			},
+			false,
+		},
+		{
+			"normal_case_with_multiple_words",
+			"Makanan ringan coca cola pepsi kentang manis 200000",
+			&ninu.InputTransaction{
+				Amount:   200000,
+				Category: "Makanan ringan coca cola pepsi kentang manis",
 			},
 			false,
 		},
