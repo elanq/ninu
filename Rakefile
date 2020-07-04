@@ -9,7 +9,7 @@ StandaloneMigrations::Configurator.environments_config do |env|
       return {
         adapter: db.scheme == 'postgres' ? 'postgresql' : db.scheme,
         host: db.host,
-        username: db.username,
+        username: db.user,
         password: db.password,
         database: db.path[1..-1],
         encoding: 'utf8'
