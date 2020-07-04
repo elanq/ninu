@@ -4,8 +4,6 @@ class CreateNewTransactions < ActiveRecord::Migration[5.2]
       t.date :date
       t.string :category
       t.integer :amount
-
-      t.timestamps
     end
 
     add_index :transactions, :date

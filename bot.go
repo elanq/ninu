@@ -50,12 +50,9 @@ func HandleAuthorize(message *tb.Message) {
 }
 
 func HandleAdd(message *tb.Message) {
-	if Client() == nil {
-		TelegramBot.Send(message.Sender, "Client is nil, authorize first")
-	}
-
 	if err := AddTransaction(message.Payload); err != nil {
 		TelegramBot.Send(message.Sender, err.Error())
+		return
 	}
 
 	TelegramBot.Send(message.Sender, "Transaction added")

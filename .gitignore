@@ -1,3 +1,4 @@
 .env
 credentials.json
 .vscode
+playground_test.go

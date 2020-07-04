@@ -14,6 +14,7 @@ func handleHealthz(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	ninu.InitPostgre()
 	ninu.InitRedis()
 	ninu.InitCredential()
 	ninu.NewTelegramBot()

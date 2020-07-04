@@ -19,8 +19,6 @@ ActiveRecord::Schema.define(version: 2020_07_04_123636) do
     t.date "date"
     t.string "category"
     t.integer "amount"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
     t.index ["category"], name: "index_transactions_on_category"
     t.index ["date"], name: "index_transactions_on_date"
   end
