@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"sync"
@@ -44,7 +44,7 @@ func InitCredential() {
 
 		if token, _ := SavedToken(); token != nil {
 			oauthClient = credential.Client(context.Background(), token)
-			fmt.Println("Authorized via saved key")
+			log.Println("Authorized via saved key")
 		}
 	})
 }
