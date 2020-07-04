@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"net/http"
+	"os"
 	"sync"
 	"time"
 
@@ -31,17 +31,12 @@ var (
 
 func InitCredential() {
 	mu.Do(func() {
-		f, err := _escLocal.Open("/credentials.json")
-		if err != nil {
-			panic(err)
+		googleCred := os.Getenv("GOOGLE_CREDENTIAL")
+		if googleCred == "" {
+			panic(errors.New("Empty google credential"))
 		}
 
-		buff, err := ioutil.ReadAll(f)
-		if err != nil {
-			panic(err)
-		}
-
-		cred, err := google.ConfigFromJSON(buff, drive.DriveScope)
+		cred, err := google.ConfigFromJSON([]byte(googleCred), drive.DriveScope)
 		if err != nil {
 			panic(err)
 		}

@@ -8,8 +8,10 @@ import (
 )
 
 func main() {
+	ninu.InitRedis()
 	ninu.InitCredential()
 	ninu.NewTelegramBot()
+
 	ninu.TelegramBot.Handle("/hello", func(m *tb.Message) {
 		ninu.TelegramBot.Send(m.Sender, "halo bro")
 	})

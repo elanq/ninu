@@ -14,7 +14,7 @@ var (
 	Redis        Cache
 )
 
-func init() {
+func InitRedis() {
 	Redis = NewRedisCache()
 }
 

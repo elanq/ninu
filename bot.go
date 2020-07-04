@@ -9,7 +9,9 @@ import (
 	tb "gopkg.in/tucnak/telebot.v2"
 )
 
-var TelegramBot *tb.Bot
+var (
+	TelegramBot *tb.Bot
+)
 
 func NewTelegramBot() {
 	token := os.Getenv("TELEGRAM_API_TOKEN")
@@ -52,20 +54,11 @@ func HandleAdd(message *tb.Message) {
 		TelegramBot.Send(message.Sender, "Client is nil, authorize first")
 	}
 
-	srv, err := sheets.New(Client())
-	if err != nil {
+	if err := AddTransaction(message.Payload); err != nil {
 		TelegramBot.Send(message.Sender, err.Error())
 	}
 
-	sheetID := os.Getenv("SPREADSHEET_ID")
-	sheetRange := "ELANQIST0609_1137757232!I:K"
-	valueRange := sheets.ValueRange{
-		MajorDimension: "COLUMNS",
-		Values: [][]interface{}{
-			[]interface{}{"1", "2", "3"},
-		},
-	}
-	srv.Spreadsheets.Values.Update(sheetID, sheetRange, &valueRange)
+	TelegramBot.Send(message.Sender, "Transaction added")
 }
 
 func HandleTest(message *tb.Message) {
