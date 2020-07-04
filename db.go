@@ -96,7 +96,6 @@ func (p *Postgre) FindAll(ctx context.Context, query *msql.SQLQuery) ([]interfac
 		return nil, err
 	}
 	sql = decorateQuery(sql)
-	fmt.Println(args)
 
 	options := &pgx.QueryExOptions{}
 	rows, err := p.conn.QueryEx(ctx, sql, options, args...)
