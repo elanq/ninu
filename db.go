@@ -2,6 +2,7 @@ package ninu
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"os"
 	"strings"
@@ -13,6 +14,25 @@ import (
 var (
 	PostgreDB DB
 )
+
+type Row map[string]interface{}
+
+func (r Row) Serialize() string {
+	res, err := json.Marshal(r)
+	if err != nil {
+		return "{}"
+	}
+
+	return string(res)
+}
+
+func (r Row) String() string {
+	var str string
+	for k, v := range r {
+		str += fmt.Sprintf("%v= %v ", k, v)
+	}
+	return str
+}
 
 func InitPostgre() {
 	PostgreDB = NewPostgreDB()
@@ -92,7 +112,7 @@ func (p *Postgre) FindAll(ctx context.Context, query *msql.SQLQuery) ([]interfac
 			return nil, err
 		}
 
-		row := map[string]interface{}{}
+		row := Row{}
 		for i, col := range cols {
 			row[col.Name] = values[i]
 		}
