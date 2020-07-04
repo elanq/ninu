@@ -22,6 +22,7 @@ const defaultDB = "ninu"
 
 type DB interface {
 	Insert(ctx context.Context, query *msql.SQLQuery) error
+	FindAll(ctx context.Context, query *msql.SQLQuery) ([]interface{}, error)
 }
 
 type Postgre struct {
@@ -67,6 +68,37 @@ func (p *Postgre) Insert(ctx context.Context, query *msql.SQLQuery) error {
 	options := &pgx.QueryExOptions{}
 	_, err = p.conn.ExecEx(ctx, sql, options, args...)
 	return err
+}
+
+func (p *Postgre) FindAll(ctx context.Context, query *msql.SQLQuery) ([]interface{}, error) {
+	sql, args, err := query.Generate()
+	if err != nil {
+		return nil, err
+	}
+	sql = decorateQuery(sql)
+	fmt.Println(args)
+
+	options := &pgx.QueryExOptions{}
+	rows, err := p.conn.QueryEx(ctx, sql, options, args...)
+	if err != nil {
+		return nil, err
+	}
+
+	results := make([]interface{}, 0)
+	cols := rows.FieldDescriptions()
+	for rows.Next() {
+		values, err := rows.Values()
+		if err != nil {
+			return nil, err
+		}
+
+		row := map[string]interface{}{}
+		for i, col := range cols {
+			row[col.Name] = values[i]
+		}
+		results = append(results, row)
+	}
+	return results, nil
 }
 
 func decorateQuery(sql string) string {

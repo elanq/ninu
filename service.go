@@ -37,3 +37,15 @@ func AddTransaction(payload string) error {
 	}
 	return err
 }
+
+func ShowTodayTransaction() (string, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), defaultTimeout)
+	defer cancel()
+
+	select {
+	case <-ctx.Done():
+		return "", errors.New("select timeout")
+	default:
+	}
+	return "", nil
+}
