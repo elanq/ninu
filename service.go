@@ -16,7 +16,6 @@ var (
 )
 
 const (
-	//	spreadSheetName = "ELANQIST0609_1137757232!I:K"
 	spreadSheetName      = "ELANQIST0609_1137757232"
 	lastTransactionEnd   = "sheet:transaction:end"
 	lastTransactionStart = "sheet:transaction:start"
@@ -48,12 +47,12 @@ func lastEndCell() (string, string) {
 	return "K", "1"
 }
 
-func transactionSheet() (string, error) {
+func transactionSheet() string {
 	startCol, startRow := lastStartCell()
 	endCol, endRow := lastEndCell()
 
 	sheetRange := fmt.Sprintf("%v!%v%v:%v%v", spreadSheetName, startCol, startRow, endCol, endRow)
-	return sheetRange, nil
+	return sheetRange
 }
 
 func updateCells(updateRows int64) error {
@@ -95,11 +94,10 @@ func AddTransaction(payload string) error {
 	}
 
 	valueRange := in.ToValueRange()
-	sheetRange, err := transactionSheet()
-	if err != nil {
-		return err
-	}
-	response, err := client.Spreadsheets.Values.Update(sheetID, sheetRange, valueRange).ValueInputOption("RAW").Do()
+	sheetRange := transactionSheet()
+	response, err := client.Spreadsheets.Values.
+		Update(sheetID, sheetRange, valueRange).
+		ValueInputOption("RAW").Do()
 	if err != nil {
 		return err
 	}
