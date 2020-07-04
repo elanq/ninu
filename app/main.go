@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 	"os"
 
@@ -25,11 +25,14 @@ func main() {
 	ninu.TelegramBot.Handle("/authorize", ninu.HandleAuthorize)
 	ninu.TelegramBot.Handle("/test", ninu.HandleTest)
 	ninu.TelegramBot.Handle("/add", ninu.HandleAdd)
-	fmt.Println("Bot is now running")
+	log.Println("Bot is now running")
+	go ninu.TelegramBot.Start()
 
 	port := os.Getenv("PORT")
+	if port == "" {
+		port = "5000"
+	}
 	http.HandleFunc("/healthz", handleHealthz)
+	log.Println("Server is now running at port", port)
 	http.ListenAndServe(":"+port, nil)
-
-	ninu.TelegramBot.Start()
 }
