@@ -37,6 +37,7 @@ func InitCredential() {
 		}
 
 		cred, err := google.ConfigFromJSON([]byte(googleCred), drive.DriveScope)
+		fmt.Println("credential", googleCred)
 		if err != nil {
 			panic(err)
 		}
