@@ -5,7 +5,6 @@ import (
 	"os"
 	"time"
 
-	"google.golang.org/api/sheets/v4"
 	tb "gopkg.in/tucnak/telebot.v2"
 )
 
@@ -49,6 +48,18 @@ func HandleAuthorize(message *tb.Message) {
 	TelegramBot.Send(sender, "User authorized")
 }
 
+func HandleShow(message *tb.Message) {
+	switch message.Payload {
+	case "today":
+		msg, err := ShowTodayTransaction()
+		if err != nil {
+			TelegramBot.Send(message.Sender, err.Error())
+			return
+		}
+		TelegramBot.Send(message.Sender, msg)
+	}
+}
+
 func HandleAdd(message *tb.Message) {
 	if err := AddTransaction(message.Payload); err != nil {
 		TelegramBot.Send(message.Sender, err.Error())
@@ -56,34 +67,6 @@ func HandleAdd(message *tb.Message) {
 	}
 
 	TelegramBot.Send(message.Sender, "Transaction added")
-}
-
-func HandleTest(message *tb.Message) {
-	if Client() == nil {
-		TelegramBot.Send(message.Sender, "Client is nil, authorize first")
-	}
-
-	srv, err := sheets.New(Client())
-	if err != nil {
-		TelegramBot.Send(message.Sender, err.Error())
-	}
-
-	sheetID := os.Getenv("SPREADSHEET_ID")
-	sheetRange := "ELANQIST0609_1137757232!A6:F"
-	resp, err := srv.Spreadsheets.Values.Get(sheetID, sheetRange).Do()
-	if err != nil {
-		TelegramBot.Send(message.Sender, err.Error())
-	}
-
-	if len(resp.Values) == 0 {
-		TelegramBot.Send(message.Sender, "No data found.")
-	}
-
-	for _, row := range resp.Values {
-		msg := fmt.Sprintf("%s %s", row[0], row[1])
-		TelegramBot.Send(message.Sender, msg)
-	}
-
 }
 
 func HandleDownload(message *tb.Message) {

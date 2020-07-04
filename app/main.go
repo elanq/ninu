@@ -24,8 +24,8 @@ func main() {
 	})
 	ninu.TelegramBot.Handle("/login", ninu.HandleLogin)
 	ninu.TelegramBot.Handle("/authorize", ninu.HandleAuthorize)
-	ninu.TelegramBot.Handle("/test", ninu.HandleTest)
 	ninu.TelegramBot.Handle("/add", ninu.HandleAdd)
+	ninu.TelegramBot.Handle("/show", ninu.HandleShow)
 	log.Println("Bot is now running")
 	go ninu.TelegramBot.Start()
 
