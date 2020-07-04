@@ -10,7 +10,3 @@ production:
   adapter: postgresql
   database: ninu
   pool: 1
-  host: <%= ENV['PG_HOST'] %>
-  username: <%= ENV['PG_USERNAME'] %>
-  password: <%= ENV['PG_PASSWORD'] %>
-
