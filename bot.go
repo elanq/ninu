@@ -48,6 +48,7 @@ func HandleAuthorize(message *tb.Message) {
 	TelegramBot.Send(sender, "User authorized")
 }
 
+// /show <duration> (today)
 func HandleShow(message *tb.Message) {
 	switch message.Payload {
 	case "today":
@@ -60,6 +61,7 @@ func HandleShow(message *tb.Message) {
 	}
 }
 
+// add <category> <amount>
 func HandleAdd(message *tb.Message) {
 	if err := AddTransaction(message.Payload); err != nil {
 		TelegramBot.Send(message.Sender, err.Error())

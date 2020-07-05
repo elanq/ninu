@@ -59,15 +59,7 @@ func ShowTodayTransaction() (string, error) {
 	msg := "Belum ada data"
 	p := message.NewPrinter(language.Indonesian)
 	if len(results) > 0 {
-		sum := int32(0)
-		for _, v := range results {
-			row := v.(Row)
-			amount, ok := row["amount"].(int32)
-			if !ok {
-				continue
-			}
-			sum += amount
-		}
+		sum := sumResults(results)
 		msg = `Jumlah transaksi hari ini Rp %v`
 		msg = p.Sprintf(msg, sum)
 	}
@@ -77,4 +69,30 @@ func ShowTodayTransaction() (string, error) {
 	default:
 	}
 	return msg, nil
+}
+
+func sumResults(results []interface{}) int64 {
+	sum := int64(0)
+	for _, v := range results {
+		row, ok := v.(Row)
+		if !ok {
+			continue
+		}
+		sum += assertInt64(row["amount"])
+	}
+
+	return sum
+}
+
+func assertInt64(v interface{}) int64 {
+	switch val := v.(type) {
+	case int:
+		return int64(val)
+	case int32:
+		return int64(val)
+	case int64:
+		return int64(val)
+	}
+
+	return 0
 }
