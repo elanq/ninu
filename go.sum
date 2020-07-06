@@ -36,8 +36,8 @@ github.com/cockroachdb/apd v1.1.0 h1:3LFP3629v+1aKXU5Q37mxmRxX/pIu1nijXydLShEq5I
 github.com/cockroachdb/apd v1.1.0/go.mod h1:8Sl8LxpKi29FqWXR16WEFZRNSz3SoPzUzeMeY4+DwBQ=
 github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
-github.com/elanq/msql v0.0.0-20200401124546-195c82f1b05b h1:S8wORmrfHRw5fHWJfgzHPxAJr/Oj+9SNdGJiKrMbjlg=
-github.com/elanq/msql v0.0.0-20200401124546-195c82f1b05b/go.mod h1:O0QIImNw3E9OmBgy+xeVQc3Zie5dp+qpA7bc4fl9wCc=
+github.com/elanq/msql v0.0.0-20200706012259-a7bf04c284bd h1:oIMbl/ZLicDlBeWyiP9Lk7izFN4UgZdchFkogHzRzt4=
+github.com/elanq/msql v0.0.0-20200706012259-a7bf04c284bd/go.mod h1:O0QIImNw3E9OmBgy+xeVQc3Zie5dp+qpA7bc4fl9wCc=
 github.com/envoyproxy/go-control-plane v0.9.0/go.mod h1:YTl/9mNaCwkRvm6d1a2C3ymFceY/DCBVvsKhRF0iEA4=
 github.com/envoyproxy/go-control-plane v0.9.1-0.20191026205805-5f8ba28d4473/go.mod h1:YTl/9mNaCwkRvm6d1a2C3ymFceY/DCBVvsKhRF0iEA4=
 github.com/envoyproxy/go-control-plane v0.9.4/go.mod h1:6rpuAdCZL397s3pYoYcLgu1mIlRU8Am5FuJP05cCM98=

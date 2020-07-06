@@ -5,7 +5,7 @@ go 1.14
 require (
 	github.com/allegro/bigcache/v2 v2.2.2
 	github.com/cockroachdb/apd v1.1.0 // indirect
-	github.com/elanq/msql v0.0.0-20200401124546-195c82f1b05b
+	github.com/elanq/msql v0.0.0-20200706012259-a7bf04c284bd
 	github.com/gofrs/uuid v3.3.0+incompatible // indirect
 	github.com/gomodule/redigo v1.8.2
 	github.com/jackc/fake v0.0.0-20150926172116-812a484cc733 // indirect

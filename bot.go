@@ -58,6 +58,20 @@ func HandleShow(message *tb.Message) {
 			return
 		}
 		TelegramBot.Send(message.Sender, msg)
+	case "weekly":
+		msg, err := ShowWeeklyTransaction()
+		if err != nil {
+			TelegramBot.Send(message.Sender, err.Error())
+			return
+		}
+		TelegramBot.Send(message.Sender, msg)
+	case "monthly":
+		msg, err := ShowMonthlyTransaction()
+		if err != nil {
+			TelegramBot.Send(message.Sender, err.Error())
+			return
+		}
+		TelegramBot.Send(message.Sender, msg)
 	}
 }
 
