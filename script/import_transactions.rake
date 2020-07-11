@@ -1,5 +1,4 @@
 require 'pg'
-require 'pry-byebug'
 require 'csv'
 
 def connect_pg!
