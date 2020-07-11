@@ -2,6 +2,7 @@ require 'standalone_migrations'
 require 'tasks/standalone_migrations'
 
 load 'script/import_transactions.rake'
+load 'script/pinger.rake'
 
 StandaloneMigrations::Configurator.environments_config do |env|
   env.on 'production' do
