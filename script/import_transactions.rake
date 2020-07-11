@@ -7,7 +7,6 @@ def connect_pg!
     uri = ENV['DATABASE_URL']
     db = URI.parse(uri)
     args = {
-      adapter: db.scheme == 'postgres' ? 'postgresql' : db.scheme,
       host: db.host,
       port: db.port,
       dbname: db.path[1..-1],
