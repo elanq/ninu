@@ -50,29 +50,26 @@ func HandleAuthorize(message *tb.Message) {
 
 // /show <duration> (today)
 func HandleShow(message *tb.Message) {
+	var msg string
+	var err error
+
 	switch message.Payload {
+	case "all":
+		msg, err = ShowAllTransaction()
 	case "today":
-		msg, err := ShowTodayTransaction()
-		if err != nil {
-			TelegramBot.Send(message.Sender, err.Error())
-			return
-		}
-		TelegramBot.Send(message.Sender, msg)
+		msg, err = ShowTodayTransaction()
 	case "weekly":
-		msg, err := ShowWeeklyTransaction()
-		if err != nil {
-			TelegramBot.Send(message.Sender, err.Error())
-			return
-		}
-		TelegramBot.Send(message.Sender, msg)
+		msg, err = ShowWeeklyTransaction()
 	case "monthly":
-		msg, err := ShowMonthlyTransaction()
-		if err != nil {
-			TelegramBot.Send(message.Sender, err.Error())
-			return
-		}
-		TelegramBot.Send(message.Sender, msg)
+		msg, err = ShowMonthlyTransaction()
+	default:
+		TelegramBot.Send(message.Sender, "command not recognized")
 	}
+	if err != nil {
+		TelegramBot.Send(message.Sender, err.Error())
+		return
+	}
+	TelegramBot.Send(message.Sender, msg, tb.ModeHTML)
 }
 
 // add <category> <amount>

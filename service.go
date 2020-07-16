@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/elanq/msql"
+	"github.com/jedib0t/go-pretty/table"
 	"golang.org/x/text/language"
 	"golang.org/x/text/message"
 )
@@ -133,6 +134,35 @@ func ShowTodayTransaction() (string, error) {
 	return msg, nil
 }
 
+func ShowAllTransaction() (string, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), defaultTimeout)
+	defer cancel()
+
+	first, last := monthRange()
+	//	now := formatDate(time.Now())
+	//	tomorrow := formatDate(time.Now().Add(24 * time.Hour))
+	query := msql.Select("id", "category", "amount").
+		From("transactions").
+		Where(
+			msql.SQLField{"date": first}.Gte(),
+			msql.SQLField{"date": last}.Lt(),
+		)
+
+	results, err := PostgreDB.FindAll(ctx, query)
+	if err != nil {
+		return "", err
+	}
+
+	msg := buildTransactionMessage(results)
+	fmt.Println(msg)
+	select {
+	case <-ctx.Done():
+		return "", errors.New("select timeout")
+	default:
+	}
+	return msg, nil
+}
+
 func sumResults(results []interface{}) int64 {
 	sum := int64(0)
 	for _, v := range results {
@@ -144,6 +174,26 @@ func sumResults(results []interface{}) int64 {
 	}
 
 	return sum
+}
+
+func buildTransactionMessage(results []interface{}) string {
+	if len(results) > 0 {
+		t := table.NewWriter()
+
+		p := message.NewPrinter(language.Indonesian)
+		t.AppendHeader(table.Row{"id", "category", "amount"})
+		for _, res := range results {
+			row, ok := res.(Row)
+			if !ok {
+				continue
+			}
+			amount := p.Sprintf("%v", row["amount"])
+			t.AppendRow(table.Row{row["id"], row["category"], amount})
+		}
+		return t.Render()
+	}
+
+	return "Belum ada data"
 }
 
 func assertInt64(v interface{}) int64 {
