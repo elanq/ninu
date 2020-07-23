@@ -30,7 +30,7 @@ func sheetClient() (*sheets.Service, error) {
 }
 
 func lastStartCell() (string, string) {
-	raw, err := Redis.Get(lastTransactionStart)
+	raw, err := Cache.Get(lastTransactionStart)
 	if err == nil && raw != nil {
 		cell := strings.Split(string(raw), "")
 		return cell[0], cell[1]
@@ -39,7 +39,7 @@ func lastStartCell() (string, string) {
 }
 
 func lastEndCell() (string, string) {
-	raw, err := Redis.Get(lastTransactionEnd)
+	raw, err := Cache.Get(lastTransactionEnd)
 	if err == nil && raw != nil {
 		cell := strings.Split(string(raw), "")
 		return cell[0], cell[1]
@@ -74,9 +74,9 @@ func updateCells(updateRows int64) error {
 	}
 	intEndRow += updateRows
 	//should have error handling here
-	Redis.Set(lastTransactionStart,
+	Cache.Set(lastTransactionStart,
 		[]byte(fmt.Sprintf("%v%v", startCol, intStartRow)))
-	Redis.Set(lastTransactionEnd,
+	Cache.Set(lastTransactionEnd,
 		[]byte(fmt.Sprintf("%v%v", endCol, intEndRow)))
 
 	return nil

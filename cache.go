@@ -11,19 +11,19 @@ const timeRepresentation = 15
 
 var (
 	CacheExpired = errors.New("Cache expired")
-	Redis        Cache
+	Cache        KeyValueCache
 )
 
-func InitRedis() {
-	Redis = NewRedisCache()
+func InitCache() {
+	Cache = NewMemoryCache()
 }
 
-type Cache interface {
+type KeyValueCache interface {
 	Set(key string, val []byte, t ...time.Duration) error
 	Get(key string) ([]byte, error)
 }
 
-func NewMemoryCache() Cache {
+func NewMemoryCache() KeyValueCache {
 	conf := bigcache.Config{
 		Shards:           2,
 		LifeWindow:       10 * time.Minute,

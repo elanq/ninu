@@ -8,7 +8,7 @@ import (
 	"github.com/gomodule/redigo/redis"
 )
 
-func NewRedisCache() Cache {
+func NewRedisCache() KeyValueCache {
 	client, err := redis.DialURL(os.Getenv("REDIS_URL"))
 	if err != nil {
 		panic(err)
