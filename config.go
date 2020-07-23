@@ -23,7 +23,6 @@ const (
 var (
 	credential  *oauth2.Config
 	mu          sync.Once
-	cache       Cache
 	oauthClient *http.Client
 
 	errEmptySavedToken = errors.New("empty saved token")
@@ -58,7 +57,7 @@ func Client() *http.Client {
 }
 
 func SavedToken() (*oauth2.Token, error) {
-	val, err := Redis.Get(tokenKey)
+	val, err := Cache.Get(tokenKey)
 	if err != nil {
 		return nil, err
 	}
@@ -85,7 +84,7 @@ func saveToken(token *oauth2.Token) error {
 	if !token.Expiry.IsZero() {
 		duration = time.Until(token.Expiry)
 	}
-	return Redis.Set(tokenKey, payload, duration)
+	return Cache.Set(tokenKey, payload, duration)
 }
 
 func Authorize(authCode string) error {
