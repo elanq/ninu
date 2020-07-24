@@ -47,7 +47,7 @@ func ShowMonthlyTransaction() (string, error) {
 	defer cancel()
 
 	startMonth, endMonth := monthRange()
-	query := msql.Select("amount").From(tableName).Where(
+	query := msql.Select("date", "category", "amount").From(tableName).Where(
 		msql.SQLField{"date": formatDate(startMonth)}.Gte(),
 		msql.SQLField{"date": formatDate(endMonth)}.Lt(),
 	)
@@ -60,9 +60,15 @@ func ShowMonthlyTransaction() (string, error) {
 	msg := "Belum ada data"
 	p := message.NewPrinter(language.Indonesian)
 	if len(results) > 0 {
+		msg = listResults(results, p)
+
 		sum := sumResults(results)
-		msg = `Jumlah transaksi bulan ini Rp %v`
-		msg = p.Sprintf(msg, sum)
+		template := `
+
+		Jumlah transaksi bulan ini Rp %v`
+		template = p.Sprintf(template, sum)
+
+		msg += template
 	}
 	select {
 	case <-ctx.Done():
@@ -77,7 +83,7 @@ func ShowWeeklyTransaction() (string, error) {
 	defer cancel()
 
 	startWeek, endWeek := weekRange()
-	query := msql.Select("amount").From(tableName).Where(
+	query := msql.Select("date", "category", "amount").From(tableName).Where(
 		msql.SQLField{"date": formatDate(startWeek)}.Gte(),
 		msql.SQLField{"date": formatDate(endWeek)}.Lt(),
 	)
@@ -90,9 +96,15 @@ func ShowWeeklyTransaction() (string, error) {
 	msg := "Belum ada data"
 	p := message.NewPrinter(language.Indonesian)
 	if len(results) > 0 {
+		msg = listResults(results, p)
+
 		sum := sumResults(results)
-		msg = `Jumlah transaksi minggu ini Rp %v`
-		msg = p.Sprintf(msg, sum)
+		template := `
+
+		Jumlah transaksi minggu ini Rp %v`
+		template = p.Sprintf(template, sum)
+
+		msg += template
 	}
 	select {
 	case <-ctx.Done():
@@ -107,7 +119,7 @@ func ShowTodayTransaction() (string, error) {
 	defer cancel()
 
 	now := formatDate(time.Now())
-	query := msql.Select("amount").
+	query := msql.Select("date", "category", "amount").
 		From("transactions").
 		Where(
 			msql.SQLField{"date": now},
@@ -121,9 +133,14 @@ func ShowTodayTransaction() (string, error) {
 	msg := "Belum ada data"
 	p := message.NewPrinter(language.Indonesian)
 	if len(results) > 0 {
+		msg = listResults(results, p)
+
 		sum := sumResults(results)
-		msg = `Jumlah transaksi hari ini Rp %v`
-		msg = p.Sprintf(msg, sum)
+		template := `
+
+		Jumlah transaksi hari ini Rp %v`
+		template = p.Sprintf(template, sum)
+		msg += template
 	}
 	select {
 	case <-ctx.Done():
@@ -131,6 +148,23 @@ func ShowTodayTransaction() (string, error) {
 	default:
 	}
 	return msg, nil
+}
+
+func listResults(results []interface{}, p *message.Printer) string {
+	var messages string
+	for i, v := range results {
+		row, ok := v.(Row)
+		if !ok {
+			continue
+		}
+		msg := `%v. [%v] %v %v
+`
+		amount := assertInt64(row["amount"])
+		msg = p.Sprintf(msg, (i + 1), formatTime(row["date"]), row["category"], amount)
+		messages += msg
+	}
+
+	return messages
 }
 
 func sumResults(results []interface{}) int64 {
@@ -146,6 +180,12 @@ func sumResults(results []interface{}) int64 {
 	return sum
 }
 
+func formatTime(v interface{}) string {
+	if v, ok := v.(time.Time); ok {
+		return v.Format("01/02/2006")
+	}
+	return ""
+}
 func assertInt64(v interface{}) int64 {
 	switch val := v.(type) {
 	case int:
